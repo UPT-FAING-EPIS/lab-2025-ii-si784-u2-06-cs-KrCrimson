@@ -1,4 +1,4 @@
-# Workflow para generar y publicar NuGet con código de matrícula como versión y crear un release
+  # Workflow para generar y publicar NuGet con código de matrícula como versión y crear un release
 name: Release NuGet Package
 
 on:
@@ -14,8 +14,14 @@ jobs:
       NUGET_VERSION: ${{ github.ref_name }}
       NUGET_REGISTRY: 'https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json'
       NUGET_PACKAGE_ID: 'UPTSiteTests'
-      CODIGO_MATRICULA: '20250001' # Reemplaza por tu código real
+      CODIGO_MATRICULA: '2019062986' # Reemplaza por tu código real
     steps:
+      - name: Instalar Playwright CLI, agregar al PATH y verificar instalación
+        run: |
+          dotnet tool install --global Microsoft.Playwright.CLI
+          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+          which playwright
+          playwright --version
       - name: Checkout repository
         uses: actions/checkout@v4
 
