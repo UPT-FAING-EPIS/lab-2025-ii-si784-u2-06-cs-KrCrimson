@@ -28,6 +28,11 @@ jobs:
       - name: List .NET global tools
         run: ls -l ~/.dotnet/tools
 
+      - name: Verificar Playwright CLI
+        run: |
+          which dotnet-playwright
+          dotnet-playwright --version
+
       - name: Instalar navegadores Playwright
         run: dotnet playwright install
 
