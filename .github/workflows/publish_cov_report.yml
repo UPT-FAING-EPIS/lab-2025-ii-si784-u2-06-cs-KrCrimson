@@ -22,6 +22,9 @@ jobs:
       - name: Instalar Playwright CLI
         run: dotnet tool install --global Microsoft.Playwright.CLI
 
+      - name: Add .NET tools to PATH
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
       - name: Instalar navegadores Playwright
         run: dotnet playwright install
 
