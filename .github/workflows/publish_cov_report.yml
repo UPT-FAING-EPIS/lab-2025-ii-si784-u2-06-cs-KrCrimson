@@ -22,7 +22,7 @@ jobs:
 
       - name: Instalar Playwright CLI y agregar al PATH
         run: |
-          dotnet tool install --global Microsoft.Playwright.CLI --verbosity detailed
+          dotnet tool install --global Microsoft.Playwright.CLI
           echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
       - name: List .NET global tools
