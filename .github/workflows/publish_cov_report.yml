@@ -24,8 +24,8 @@ jobs:
         run: |
           dotnet tool install --global Microsoft.Playwright.CLI
           echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
-          which dotnet-playwright
-          dotnet-playwright --version
+          which playwright
+          playwright --version
 
       - name: List .NET global tools
         run: ls -l ~/.dotnet/tools
