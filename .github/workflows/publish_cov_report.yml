@@ -1,5 +1,5 @@
 # This workflow builds, prueba y publica cobertura y videos de Playwright en GitHub Pages
-name: Build, Test & Publish Coverage/Video
+name: Build, Test & Publish Coverage/Video reportgenerator
 
 on:
   push:
@@ -19,10 +19,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Install Playwright Browsers
-        run: |
-          dotnet tool restore
-          pwsh UPTSiteTests/bin/Debug/net8.0/playwright.ps1 install
+      - name: Instalar Playwright CLI
+        run: dotnet tool install --global Microsoft.Playwright.CLI
+
+      - name: Instalar navegadores Playwright
+        run: dotnet playwright install
 
       - name: Build
         run: dotnet build --configuration Release

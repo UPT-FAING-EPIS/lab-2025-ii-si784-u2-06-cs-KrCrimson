@@ -2,7 +2,6 @@
 # SESION DE LABORATORIO N° 06: PRUEBAS DE INTERFAZ DE USUARIO
 
 ### Nombre:
-
 ## OBJETIVOS
   * Comprender el funcionamiento de las pruebas de interfaz de usuario en una aplicación web.
 
