@@ -19,11 +19,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Instalar Playwright CLI
-        run: dotnet tool install --global Microsoft.Playwright.CLI --verbosity detailed
 
-      - name: Add .NET tools to PATH
-        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+      - name: Instalar Playwright CLI y agregar al PATH
+        run: |
+          dotnet tool install --global Microsoft.Playwright.CLI --verbosity detailed
+          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
       - name: List .NET global tools
         run: ls -l ~/.dotnet/tools
