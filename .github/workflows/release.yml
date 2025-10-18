@@ -1,0 +1,53 @@
+# Workflow para generar y publicar NuGet con código de matrícula como versión y crear un release
+name: Release NuGet Package
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-nuget-publish:
+    runs-on: ubuntu-latest
+    env:
+      NUGET_VERSION: ${{ github.ref_name }}
+      NUGET_REGISTRY: 'https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json'
+      NUGET_PACKAGE_ID: 'UPTSiteTests'
+      CODIGO_MATRICULA: '20250001' # Reemplaza por tu código real
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Set NuGet version from matrícula
+        run: |
+          echo "##[set-output name=version;]${{ env.CODIGO_MATRICULA }}"
+        id: matricula
+
+      - name: Pack NuGet
+        run: |
+          dotnet pack UPTSiteTests/UPTSiteTests.csproj \
+            -c Release \
+            -p:PackageVersion=${{ env.CODIGO_MATRICULA }} \
+            -o ./nupkg
+
+      - name: Publish NuGet to GitHub Packages
+        run: |
+          dotnet nuget push ./nupkg/*.nupkg \
+            --api-key ${{ secrets.GITHUB_TOKEN }} \
+            --source ${{ env.NUGET_REGISTRY }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.CODIGO_MATRICULA }}
+          name: Release v${{ env.CODIGO_MATRICULA }}
+          body: |
+            Publicación automática del paquete NuGet con versión igual al código de matrícula: ${{ env.CODIGO_MATRICULA }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

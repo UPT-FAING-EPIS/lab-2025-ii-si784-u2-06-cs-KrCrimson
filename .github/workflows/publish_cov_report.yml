@@ -1,0 +1,56 @@
+# This workflow builds, prueba y publica cobertura y videos de Playwright en GitHub Pages
+name: Build, Test & Publish Coverage/Video
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install Playwright Browsers
+        run: |
+          dotnet tool restore
+          pwsh UPTSiteTests/bin/Debug/net8.0/playwright.ps1 install
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Run tests with coverage
+        run: dotnet test --collect:"XPlat Code Coverage" --results-directory TestResults
+
+      - name: Publish coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: UPTSiteTests/TestResults/**/*.xml
+
+      - name: Publish Playwright videos
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-videos
+          path: UPTSiteTests/videos/
+
+      - name: Prepare GitHub Pages content
+        run: |
+          mkdir -p gh-pages
+          cp -r UPTSiteTests/videos gh-pages/
+          cp UPTSiteTests/TestResults/**/*.xml gh-pages/ || true
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./gh-pages
+          publish_branch: gh-pages
